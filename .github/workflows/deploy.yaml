@@ -28,9 +28,9 @@ jobs:
         env:
           GITHUB_REF: ${{ github.ref }}
         run: |
-          ssh -o StrictHostKeyChecking=no gituser@139.177.197.79 'bash -s' << 'EOF'
-          # Debugging the branch name extraction
-          echo "GITHUB_REF: $GITHUB_REF"
+          ssh -o StrictHostKeyChecking=no gituser@139.177.197.79 "bash -s -- $GITHUB_REF" << 'EOF'
+          GITHUB_REF=$1
+          echo "GITHUB_REF passed into SSH session: $GITHUB_REF"
           BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')
           echo "Extracted BRANCH_NAME: $BRANCH_NAME"
 
