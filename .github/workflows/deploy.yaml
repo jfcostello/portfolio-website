@@ -25,9 +25,15 @@ jobs:
           chmod 644 ~/.ssh/known_hosts
 
       - name: Deploy to Server
+        env:
+          GITHUB_REF: ${{ github.ref }}
         run: |
           ssh -o StrictHostKeyChecking=no gituser@139.177.197.79 'bash -s' << 'EOF'
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          # Debugging the branch name extraction
+          echo "GITHUB_REF: $GITHUB_REF"
+          BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')
+          echo "Extracted BRANCH_NAME: $BRANCH_NAME"
+
           if [ "$BRANCH_NAME" = "master" ]; then
             DEPLOY_DIR="/var/www/html/portfolio/prod"
           elif [ "$BRANCH_NAME" = "staging" ]; then
